@@ -1,34 +1,44 @@
-apply plugin: 'java'
-apply plugin: 'application'
-
-mainClassName = 'org.oneframework.runner.TestRunner'
-
-group 'OneFramework'
-version '1.0-SNAPSHOT'
-
-apply plugin: 'java'
-
-sourceCompatibility = 1.8
-
-repositories {
-    mavenCentral()
-}
-
-dependencies {
-    compile group: 'io.appium', name: 'java-client', version: '6.0.0'
-    compile group: 'org.testng', name: 'testng', version: '6.9.10'
-    compile group: 'io.github.bonigarcia', name: 'webdrivermanager', version: '3.3.0'
-    compile group: 'commons-io', name: 'commons-io', version: '2.6'
-    compile 'ru.yandex.qatools.ashot:ashot:1.5.2'
-    compile group: 'io.qameta.allure', name: 'allure-testng', version: '2.8.1'
-}
-
-jar {
-    manifest {
-        attributes 'Main-Class': mainClassName
+buildscript {
+    repositories {
+        jcenter()
+        
     }
+    dependencies {
+        //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
+    }
+}
 
-    from {
-        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+allprojects {
+    apply plugin: "com.jfrog.artifactory"
+}
+
+artifactory {
+    contextUrl = "${artifactory_contextUrl}"   //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = 'test-gradle-dev-local'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+            ivy {
+                ivyLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).pom'
+                artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
+                mavenCompatible = true
+            }
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'test-gradle-dev'
+            username = "${artifactory_user}"
+            password = "${artifactory_password}"
+            maven = true
+            ivy {
+                ivyLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).pom'
+                artifactLayout = '[organization]/[module]/[revision]/[module]-[revision](-[classifier]).[ext]'
+                mavenCompatible = true
+            }
+        }
     }
 }
