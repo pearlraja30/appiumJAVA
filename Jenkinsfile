@@ -10,7 +10,7 @@ pipeline {
 
 
 
-  gradle 'gradle693'
+  gradle 'gradle1'
 
 
 
