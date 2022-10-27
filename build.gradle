@@ -1,8 +1,25 @@
-buildscript {
-    repositories {
+plugins {
+        id 'org.springframework.boot' version '2.7.1'
+        id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+        id 'java'
+}
+
+group = 'com.demo'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '11'
+
+repositories {
         jcenter()
+        mavenCentral()
         
     }
+  dependencies {
+        implementation 'org.springframework.boot:spring-boot-starter'
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+buildscript {
+    
     dependencies {
         //Check for the latest version here: http://plugins.gradle.org/plugin/com.jfrog.artifactory
         classpath "org.jfrog.buildinfo:build-info-extractor-gradle:4+"
